@@ -26,4 +26,7 @@
         <item>BurgerPlace</item>
         <item>FancyRestaurant</item>
     </string-array>
+    <string name="geo_finish">Finish</string>
+    <string name="geo_info">You will be notified of possibility making GeoPay payment when enter those locations.</string>
+    <string name="geo_make_payment">Pay</string>
 </resources>
