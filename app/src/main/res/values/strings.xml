@@ -8,7 +8,7 @@
     <string name="geo_sub">Subscribe</string>
     <string name="geo_succ">You succesfully subscribed to following merchants:</string>
     <string name="geo_pin">Enter your user pin</string>
-    <string name="geo_notify_area">You entered GeoPeay area</string>
+    <string name="geo_notify_area">You entered GeoPay area</string>
     <string name="geo_if_pay">Do you want to pay?</string>
     <string name="geo_pay_succ">Payment Sucessfull ^^</string>
     <string-array name="geo_mock_areas">
@@ -29,4 +29,6 @@
     <string name="geo_finish">Finish</string>
     <string name="geo_info">You will be notified of possibility making GeoPay payment when enter those locations.</string>
     <string name="geo_make_payment">Pay</string>
+    <string name="geo_cha_name">MainActChannel</string>
+    <string name="geo_cha_desc">Main Activity channel description</string>
 </resources>
