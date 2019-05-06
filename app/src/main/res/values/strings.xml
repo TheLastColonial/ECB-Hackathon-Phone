@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">GeoPay</string>
-    <string name="geo_welcome">Welcome ! Enter your user name to start :)</string>
+    <string name="geo_welcome">Welcome! Enter your user name to start :)</string>
     <string name="geo_user">user name</string>
     <string name="geo_next">Next</string>
     <string name="geo_ch_area">Choose Area:</string>
@@ -27,7 +27,7 @@
         <item>FancyRestaurant</item>
     </string-array>
     <string name="geo_finish">Finish</string>
-    <string name="geo_info">You will be notified of possibility making GeoPay payment when enter those locations.</string>
+    <string name="geo_info">You will be notified of possibility to make GeoPay payment when enter those locations.</string>
     <string name="geo_make_payment">Pay</string>
     <string name="geo_cha_name">MainActChannel</string>
     <string name="geo_cha_desc">Main Activity channel description</string>
@@ -49,7 +49,7 @@
     <string name="menu_tools">Tools</string>
     <string name="menu_share">Share</string>
     <string name="menu_send">Send</string>
-    <string name="geo_registered_m">Regestered Merchants</string>
+    <string name="geo_registered_m">Registered Merchants</string>
     <string name="geo_trans_pending">Pending Transactions</string>
     <string name="geo_trans_history">Transactions History</string>
     <string name="geo_goto_subs">Subscribe to Merchants</string>
