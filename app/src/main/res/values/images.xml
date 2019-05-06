@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name = "ico">
+        <item>@drawable/ham</item>
+        <item>@drawable/sth</item>
+        <item>@drawable/cat</item>
+        <item>@drawable/wolf</item>
+        <item>@drawable/uni</item>
+        <item>@drawable/cow</item>
+    </array>
+</resources>
