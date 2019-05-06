@@ -42,7 +42,7 @@ public class Subscribe extends AppCompatActivity {
         String title = getResources().getString(R.string.geo_notify_area);
         String content = getResources().getString(R.string.geo_if_pay);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSmallIcon(R.drawable.cat)
+                .setSmallIcon(R.drawable.animal)
                 .setContentTitle(title)
                 .setContentText(content)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
