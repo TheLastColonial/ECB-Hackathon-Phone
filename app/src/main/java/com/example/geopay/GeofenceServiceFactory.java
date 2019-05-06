@@ -8,14 +8,14 @@ public class GeofenceServiceFactory
     public IGeofenceService GetGeofenceService(Context context)
     {
         GeofenceService service = new GeofenceService();
-        service.Initialize();
+        service.Initialize(context);
         return service;
     }
 
     public IGeofenceService GetGeofenceService(Activity activity)
     {
         GeofenceService service = new GeofenceService();
-        service.Initialize();
+        //service.Initialize();
         return service;
     }
 }

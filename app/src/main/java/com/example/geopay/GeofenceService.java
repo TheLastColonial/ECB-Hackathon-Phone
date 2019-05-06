@@ -2,8 +2,12 @@ package com.example.geopay;
 
 // GeofenceErrorMessages pakcages
 
+import android.content.Context;
+
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.location.GeofenceStatusCodes;
+import com.google.android.gms.location.GeofencingClient;
+import com.google.android.gms.location.LocationServices;
 
 import java.util.List;
 
@@ -26,9 +30,11 @@ interface IGeofenceService {
 
 public class GeofenceService implements IGeofenceService{
 
-    public void Initialize()
-    {
+    private GeofencingClient geofencingClient;
 
+    public void Initialize(Context context)
+    {
+        geofencingClient = LocationServices.getGeofencingClient(context);
     }
 
     @Override
