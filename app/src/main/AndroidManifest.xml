@@ -16,7 +16,7 @@
         <!-- geofencing -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key" />
+            android:value="AIzaSyBvmzy6EZ_hw9xnMD7en7KCjQGcYk88n4U" />
         <activity android:name=".Payment"></activity>
         <activity android:name=".Subscribe" />
         <activity android:name=".Merchants" />
