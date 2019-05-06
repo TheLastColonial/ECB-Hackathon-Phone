@@ -28,4 +28,10 @@ public class UserHome extends AppCompatActivity {
             startActivity(intent);
         }
     }
+
+    public void goToRegistered(View view)
+    {
+        Intent intentR = new Intent(this, RegisteredMerchants.class);
+        startActivity(intentR);
+    }
 }

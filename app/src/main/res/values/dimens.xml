@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="mrg">8dp</dimen>
+    <dimen name="pad">5</dimen>
+    <dimen name="pad_five">5dp</dimen>
+</resources>

@@ -54,4 +54,9 @@
     <string name="geo_trans_history">Transactions History</string>
     <string name="geo_goto_subs">Subscribe to Merchants</string>
     <string name="geo_user_settings">Settings</string>
+    <string name="geo_m_rock">RockConcert</string>
+    <string name="geo_m_rock_a">City, Fake Street 5</string>
+    <string name="geo_m_mus">Museum</string>
+    <string name="geo_m_mus_a">Kensignton, Non-existing Building</string>
+    <string name="geo_registered_info">You are subscribed to following locations:</string>
 </resources>
