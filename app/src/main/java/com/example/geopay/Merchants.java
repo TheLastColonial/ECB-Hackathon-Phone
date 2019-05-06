@@ -1,12 +1,16 @@
 package com.example.geopay;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Merchants extends AppCompatActivity {
 
@@ -47,9 +51,32 @@ public class Merchants extends AppCompatActivity {
     {
         names = adp.getNamesArray();
         checkedAr = adp.getCheckedArray();
+
+        //backend processes - register externally
+        // get geofenceModel based on getChcekedArray merchant id
+        List<GeofenceModel> models = GetGeofenceModelsBasedOn(0);
+        registerGeoFences(models);
+
+
         Intent intent = new Intent(this, Subscribe.class);
         intent.putExtra(SELECTED_MERCH, this.getSubscribedViews());
         startActivity(intent);
+    }
+
+    public List<GeofenceModel> GetGeofenceModelsBasedOn(int merchantId)
+    {
+        //List<GeofenceModel> list = new List<GeofenceModel>();
+        ArrayList arrayList = new ArrayList<GeofenceModel>();
+        arrayList.add(mockGeoFenceModelData());
+        return arrayList;
+    }
+
+    public void registerGeoFences(List<GeofenceModel> models)
+    {
+        GeofenceServiceFactory factory = new GeofenceServiceFactory();
+        IGeofenceService service = factory.GetGeofenceService((Context)this);
+
+        service.AddGeofence(models);
     }
 
     private String getSubscribedViews()
@@ -61,5 +88,16 @@ public class Merchants extends AppCompatActivity {
             }
         }
         return selectedM;
+    }
+
+    private GeofenceModel mockGeoFenceModelData()
+    {
+        GeofenceModel model = new GeofenceModel();
+        model.geofenceMerchantReference= "REF123";
+        model.id = 0;
+        model.latitude = 2.2;
+        model.longitude = 5.5;
+        model.radius = 10;
+        return model;
     }
 }
