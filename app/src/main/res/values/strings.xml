@@ -1,3 +1,29 @@
 <resources>
     <string name="app_name">GeoPay</string>
+    <string name="geo_welcome">Welcome ! Enter your user name to start :)</string>
+    <string name="geo_user">user name</string>
+    <string name="geo_next">Next</string>
+    <string name="geo_ch_area">Choose Area:</string>
+    <string name="geo_ch_merch">Choose merchants:</string>
+    <string name="geo_sub">Subscribe</string>
+    <string name="geo_succ">You succesfully subscribed to following merchants:</string>
+    <string name="geo_pin">Enter your user pin</string>
+    <string name="geo_notify_area">You entered GeoPeay area</string>
+    <string name="geo_if_pay">Do you want to pay?</string>
+    <string name="geo_pay_succ">Payment Sucessfull ^^</string>
+    <string-array name="geo_mock_areas">
+        <item>City</item>
+        <item>Shoreditch</item>
+        <item>Camden</item>
+        <item>Vauxhall</item>
+        <item>Kensington</item>
+    </string-array>
+    <string-array name="geo_mock_merchants">
+        <item>Museum</item>
+        <item>ArtGallery</item>
+        <item>RockConcert</item>
+        <item>ComedyStandup</item>
+        <item>BurgerPlace</item>
+        <item>FancyRestaurant</item>
+    </string-array>
 </resources>
