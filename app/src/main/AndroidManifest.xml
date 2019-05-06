@@ -13,12 +13,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <!-- geofencing -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
-
         <activity android:name=".Payment"></activity>
         <activity android:name=".Subscribe" />
         <activity android:name=".Merchants" />
