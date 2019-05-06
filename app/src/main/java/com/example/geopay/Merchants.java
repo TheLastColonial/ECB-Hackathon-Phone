@@ -10,10 +10,15 @@ import android.widget.ListView;
 
 public class Merchants extends AppCompatActivity {
 
+    public static final String SELECTED_MERCH = "arg_array_list";
     String[] nameArray;
     TypedArray imageArray;
     impLVCustomAdapter adp;
     ListView listView;
+
+    boolean[] checkedAr;
+    String[] names;
+    String selectedM;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,5 +41,25 @@ public class Merchants extends AppCompatActivity {
             listView.setAdapter(adp);
         }
 
+    }
+
+    public void subscribeClick(View view)
+    {
+        names = adp.getNamesArray();
+        checkedAr = adp.getCheckedArray();
+        Intent intent = new Intent(this, Subscribe.class);
+        intent.putExtra(SELECTED_MERCH, this.getSubscribedViews());
+        startActivity(intent);
+    }
+
+    private String getSubscribedViews()
+    {
+        for (int i = 0; i < checkedAr.length ; i++) {
+            if(checkedAr[i]==true)
+            {
+                selectedM = selectedM + ", " + names[i];
+            }
+        }
+        return selectedM;
     }
 }
