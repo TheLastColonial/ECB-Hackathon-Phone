@@ -1,19 +1,13 @@
 package com.example.geopay;
 
 // GeofenceErrorMessages pakcages
-import android.app.IntentService;
-
-import android.content.Intent;
 
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofenceStatusCodes;
 
-// to get geofencingclient api
-import com.google.android.gms.location.GeofencingEvent;
-import com.google.android.gms.location.LocationServices;
-
 import java.util.List;
+
+// to get geofencingclient api
 
 class GeofenceModel
 {
@@ -25,8 +19,9 @@ class GeofenceModel
 }
 
 interface IGeofenceService {
-    void AddGeofence(int id, java.lang.String geomerReference, double  latitude, double longitude, float radius);
-    void AddGeofence(GeofenceModel geofenceModel);
+    int AddGeofence(int id, java.lang.String geomerReference, double  latitude, double longitude, float radius);
+    int AddGeofence(GeofenceModel geofenceModel);
+    int AddGeofence(List<GeofenceModel> geofenceModel);
 }
 
 public class GeofenceService implements IGeofenceService{
@@ -37,13 +32,19 @@ public class GeofenceService implements IGeofenceService{
     }
 
     @Override
-    public void AddGeofence(int id, java.lang.String geomerReference, double latitude, double longitude, float radius) {
+    public int AddGeofence(int id, java.lang.String geomerReference, double latitude, double longitude, float radius) {
 
+        return 0;
     }
 
     @Override
-    public void AddGeofence(GeofenceModel geofenceModel) {
+    public int AddGeofence(GeofenceModel geofenceModel) {
+        return 0;
+    }
 
+    @Override
+    public int AddGeofence(List<GeofenceModel> geofenceModel) {
+        return 0;
     }
 
 
