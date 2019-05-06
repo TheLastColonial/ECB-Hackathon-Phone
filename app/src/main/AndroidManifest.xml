@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.geopay">
-
     <!-- geofencing -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -13,12 +12,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".UserHome"></activity>
         <!-- geofencing -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBvmzy6EZ_hw9xnMD7en7KCjQGcYk88n4U" />
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
 
-        <activity android:name=".Payment"></activity>
+        <activity android:name=".Payment" />
         <activity android:name=".Subscribe" />
         <activity android:name=".Merchants" />
         <activity android:name=".Area" />

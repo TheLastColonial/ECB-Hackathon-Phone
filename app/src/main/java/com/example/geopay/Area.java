@@ -1,7 +1,5 @@
 package com.example.geopay;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -11,7 +9,11 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+
+import androidx.appcompat.app.AppCompatActivity;
+
 import org.json.JSONException;
+
 
 public class Area extends AppCompatActivity {
 
@@ -31,7 +33,7 @@ public class Area extends AppCompatActivity {
 
         //get username from main activity and set up the spinner
         Intent intent = getIntent();
-        String message = intent.getStringExtra(MainActivity.USERNAME);
+        String message = intent.getStringExtra(UserHome.USERNAME);
 
         if(message != "")
         {

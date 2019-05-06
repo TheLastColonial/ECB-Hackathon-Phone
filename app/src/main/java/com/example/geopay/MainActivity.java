@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     //Controls events
     public void goToAreas(View view)
     {
-        Intent intent = new Intent(this, Area.class);
+        Intent intent = new Intent(this, UserHome.class);
         EditText username = (EditText) findViewById(R.id.txtUsername);
         String message = username.getText().toString();
 

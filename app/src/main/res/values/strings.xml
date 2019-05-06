@@ -31,4 +31,27 @@
     <string name="geo_make_payment">Pay</string>
     <string name="geo_cha_name">MainActChannel</string>
     <string name="geo_cha_desc">Main Activity channel description</string>
+    <string name="geo_logo">GeoPay.World</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_user_home">UserHome</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_home">Home</string>
+    <string name="menu_gallery">Gallery</string>
+    <string name="menu_slideshow">Slideshow</string>
+    <string name="menu_tools">Tools</string>
+    <string name="menu_share">Share</string>
+    <string name="menu_send">Send</string>
+    <string name="geo_registered_m">Regestered Merchants</string>
+    <string name="geo_trans_pending">Pending Transactions</string>
+    <string name="geo_trans_history">Transactions History</string>
+    <string name="geo_goto_subs">Subscribe to Merchants</string>
+    <string name="geo_user_settings">Settings</string>
 </resources>
