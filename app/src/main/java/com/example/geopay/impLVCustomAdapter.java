@@ -11,18 +11,20 @@ import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
+import java.util.ArrayList;
+
 public class impLVCustomAdapter extends ArrayAdapter {
     //to reference the Activity
     private final Activity context;
     //to store the  images
     private final TypedArray imageArray;
     //to store the list of merchants
-    private final String[] nameArray;
+    private final ArrayList<String> nameArray;
     //to reference checkboxes state
     private final boolean[] boolArray;
 
     //costructor
-    public impLVCustomAdapter(Activity context, String[] nameArrayParam, TypedArray imageIDArrayParam){
+    public impLVCustomAdapter(Activity context, ArrayList<String> nameArrayParam, TypedArray imageIDArrayParam){
 
         super(context,R.layout.list_item , nameArrayParam);
         this.context=context;
@@ -35,7 +37,7 @@ public class impLVCustomAdapter extends ArrayAdapter {
         return boolArray;
     }
 
-    public String[] getNamesArray(){
+    public ArrayList<String> getNamesArray(){
         return nameArray;
     }
 
@@ -55,7 +57,7 @@ public class impLVCustomAdapter extends ArrayAdapter {
         ImageView img = (ImageView) rowView.findViewById(R.id.listImg);
 
         //this code sets the values of the objects to values from the arrays
-        nameTextField.setText(nameArray[position]);
+        nameTextField.setText(nameArray.get(position));
         img.setImageDrawable(imageArray.getDrawable(position));
 
         return rowView;

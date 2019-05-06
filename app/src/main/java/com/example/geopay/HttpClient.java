@@ -7,12 +7,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.sql.Array;
+import java.util.ArrayList;
 
 import javax.net.ssl.HttpsURLConnection;
 
 public class HttpClient {
-    //API url string
-    private static String BASE_URL = "https://geopayapi-2019-v2.azurewebsites.net/api/Merchants";
+
     //getter for retreiving data from the url
     public String getMerchantData() {
         HttpsURLConnection myConnection = null;
@@ -55,5 +56,35 @@ public class HttpClient {
         }
 
         return null;
+    }
+
+    public void postSubscriptions(ArrayList<Integer> merchantsArray){
+        HttpsURLConnection myConnection = null;
+        InputStream is = null;
+
+        try {
+            for (int i = 0; i < merchantsArray.size(); i++) {
+                URL merchantURL = new URL("https://geopayapi-2019-v2.azurewebsites.net/api/Subscription?userId=1&merchantId=" + merchantsArray.get(i));
+                // Create connection
+                myConnection =
+                        (HttpsURLConnection) merchantURL.openConnection();
+                if (myConnection.getResponseCode() == 200) {
+                    is.close();
+                    myConnection.disconnect();
+
+                } else {
+                    // Error handling code goes here
+                }
+            }
+            } catch(Exception e){
+                e.printStackTrace();
+            }
+            //whether connection or not, close and disconnect
+        finally{
+                try {
+                    myConnection.disconnect();
+                } catch (Exception e) {
+                }
+            }
     }
 }
