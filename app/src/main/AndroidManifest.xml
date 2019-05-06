@@ -12,7 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".UserHome"></activity>
+        <activity android:name=".UserHome"
+            android:parentActivityName=".MainActivity"/>
         <!-- geofencing -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -22,13 +23,15 @@
             android:resource="@array/preloaded_fonts" />
 
         <activity android:name=".Payment" />
-        <activity android:name=".Subscribe" />
-        <activity android:name=".Merchants" />
-        <activity android:name=".Area" />
+        <activity android:name=".Subscribe"
+            android:parentActivityName=".Merchants" />
+        <activity android:name=".Merchants"
+            android:parentActivityName=".Area"/>
+        <activity android:name=".Area"
+            android:parentActivityName=".UserHome"/>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
