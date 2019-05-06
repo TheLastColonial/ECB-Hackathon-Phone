@@ -2,38 +2,58 @@ package com.example.geopay;
 
 // GeofenceErrorMessages pakcages
 
+import android.Manifest;
+import android.app.Activity;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofenceStatusCodes;
 import com.google.android.gms.location.GeofencingClient;
+import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 // to get geofencingclient api
 
-class GeofenceModel
-{
+class GeofenceModel {
     public int id;
     public String geofenceMerchantReference;
-    public double  latitude;
+    public double latitude;
     public double longitude;
     public float radius;
 }
 
 interface IGeofenceService {
-    int AddGeofence(int id, java.lang.String geomerReference, double  latitude, double longitude, float radius);
+    int AddGeofence(int id, java.lang.String geomerReference, double latitude, double longitude, float radius);
+
     int AddGeofence(GeofenceModel geofenceModel);
+
     int AddGeofence(List<GeofenceModel> geofenceModel);
 }
 
-public class GeofenceService implements IGeofenceService{
+public class GeofenceService implements IGeofenceService {
 
+    private Activity activty;
+    private Context context;
+    // 24 hours
+    private static long GEOFENCE_EXPRITATION_TIME = 24 * 60 * 60 * 1000;
     private GeofencingClient geofencingClient;
+    private PendingIntent geofencePendingIntent;
 
-    public void Initialize(Context context)
-    {
+    public void Initialize(Context context, Activity activity) {
+        this.activty = activity;
+        this.context = context;
         geofencingClient = LocationServices.getGeofencingClient(context);
     }
 
@@ -50,9 +70,68 @@ public class GeofenceService implements IGeofenceService{
 
     @Override
     public int AddGeofence(List<GeofenceModel> geofenceModel) {
+        if (ContextCompat.checkSelfPermission(this.context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            this.geofencingClient.addGeofences(this.getGeofencingRequest(GetGeofenceList(geofenceModel)), this.getGeofencePendingIntent(this.context))
+                    .addOnSuccessListener(this.activty, new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            // Geofences added
+                            // ...
+                        }
+                    })
+                    .addOnFailureListener(this.activty, new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            // Failed to add geofences
+                            // ...
+                        }
+                    });
+        }
+
         return 0;
     }
 
+    private PendingIntent getGeofencePendingIntent(Context context) {
+        // Reuse the PendingIntent if we already have it.
+        if (geofencePendingIntent != null) {
+            return geofencePendingIntent;
+        }
+        Intent intent = new Intent(context, GeofenceTransistionsIntentService.class);
+        // We use FLAG_UPDATE_CURRENT so that we get the same pending intent back when
+        // calling addGeofences() and removeGeofences().
+        geofencePendingIntent = PendingIntent.getService(context, 0, intent, PendingIntent.
+                FLAG_UPDATE_CURRENT);
+        return geofencePendingIntent;
+    }
+
+    private List<Geofence> GetGeofenceList(List<GeofenceModel> models)
+    {
+        ArrayList<Geofence> list = new ArrayList<Geofence>();
+        for (GeofenceModel model : models){
+            list.add(new Geofence.Builder()
+                    // Set the request ID of the geofence. This is a string to identify this
+                    // geofence.
+                    .setRequestId(model.geofenceMerchantReference)
+
+                    .setCircularRegion(
+                            model.latitude,
+                            model.longitude,
+                            model.radius
+                    )
+                    .setExpirationDuration(GEOFENCE_EXPRITATION_TIME)
+                    .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER |
+                            Geofence.GEOFENCE_TRANSITION_EXIT)
+                    .build());
+        }
+        return list;
+    }
+
+    private GeofencingRequest getGeofencingRequest(List<Geofence> list) {
+        GeofencingRequest.Builder builder = new GeofencingRequest.Builder();
+        builder.setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER);
+        builder.addGeofences(list);
+        return builder.build();
+    }
 
 }
 

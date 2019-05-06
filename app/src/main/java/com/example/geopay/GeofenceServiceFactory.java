@@ -5,10 +5,10 @@ import android.content.Context;
 
 public class GeofenceServiceFactory
 {
-    public IGeofenceService GetGeofenceService(Context context)
+    public IGeofenceService GetGeofenceService(Context context, Activity activity)
     {
         GeofenceService service = new GeofenceService();
-        service.Initialize(context);
+        service.Initialize(context, activity);
         return service;
     }
 

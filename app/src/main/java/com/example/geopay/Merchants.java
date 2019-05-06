@@ -1,5 +1,6 @@
 package com.example.geopay;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
@@ -74,7 +75,7 @@ public class Merchants extends AppCompatActivity {
     public void registerGeoFences(List<GeofenceModel> models)
     {
         GeofenceServiceFactory factory = new GeofenceServiceFactory();
-        IGeofenceService service = factory.GetGeofenceService((Context)this);
+        IGeofenceService service = factory.GetGeofenceService((Context)this, (Activity)this);
 
         service.AddGeofence(models);
     }
@@ -95,8 +96,8 @@ public class Merchants extends AppCompatActivity {
         GeofenceModel model = new GeofenceModel();
         model.geofenceMerchantReference= "REF123";
         model.id = 0;
-        model.latitude = 2.2;
-        model.longitude = 5.5;
+        model.latitude = 50.1095;
+        model.longitude = 8.674;
         model.radius = 10;
         return model;
     }
