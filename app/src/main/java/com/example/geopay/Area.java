@@ -59,7 +59,7 @@ public class Area extends AppCompatActivity {
     public void goToMerchants(View view)
     {
         Intent intent = new Intent(this, Merchants.class);
-        intent.putExtra(AREA, selectedArea);
+        intent.putExtra("merchantList", merchantList);
         startActivity(intent);
     }
 
