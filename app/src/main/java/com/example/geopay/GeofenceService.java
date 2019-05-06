@@ -40,21 +40,36 @@ interface IGeofenceService {
     int AddGeofence(GeofenceModel geofenceModel);
 
     int AddGeofence(List<GeofenceModel> geofenceModel);
+
+    void Initialize(Context context);
+
+    GeofencingClient GetClient();
+
+    List<Geofence> GetGeofenceList(List<GeofenceModel> models);
+
+    PendingIntent getGeofencePendingIntent(Context context);
+
+    GeofencingRequest getGeofencingRequest(List<Geofence> list);
 }
 
 public class GeofenceService implements IGeofenceService {
 
-    private Activity activty;
     private Context context;
     // 24 hours
     private static long GEOFENCE_EXPRITATION_TIME = 24 * 60 * 60 * 1000;
     private GeofencingClient geofencingClient;
     private PendingIntent geofencePendingIntent;
 
-    public void Initialize(Context context, Activity activity) {
-        this.activty = activity;
+    public void Initialize(Context context) {
         this.context = context;
         geofencingClient = LocationServices.getGeofencingClient(context);
+    }
+
+
+    @Override
+    public GeofencingClient GetClient()
+    {
+        return this.geofencingClient;
     }
 
     @Override
@@ -70,28 +85,11 @@ public class GeofenceService implements IGeofenceService {
 
     @Override
     public int AddGeofence(List<GeofenceModel> geofenceModel) {
-        if (ContextCompat.checkSelfPermission(this.context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            this.geofencingClient.addGeofences(this.getGeofencingRequest(GetGeofenceList(geofenceModel)), this.getGeofencePendingIntent(this.context))
-                    .addOnSuccessListener(this.activty, new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            // Geofences added
-                            // ...
-                        }
-                    })
-                    .addOnFailureListener(this.activty, new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            // Failed to add geofences
-                            // ...
-                        }
-                    });
-        }
 
         return 0;
     }
 
-    private PendingIntent getGeofencePendingIntent(Context context) {
+    public PendingIntent getGeofencePendingIntent(Context context) {
         // Reuse the PendingIntent if we already have it.
         if (geofencePendingIntent != null) {
             return geofencePendingIntent;
@@ -104,7 +102,7 @@ public class GeofenceService implements IGeofenceService {
         return geofencePendingIntent;
     }
 
-    private List<Geofence> GetGeofenceList(List<GeofenceModel> models)
+    public List<Geofence> GetGeofenceList(List<GeofenceModel> models)
     {
         ArrayList<Geofence> list = new ArrayList<Geofence>();
         for (GeofenceModel model : models){
@@ -126,7 +124,7 @@ public class GeofenceService implements IGeofenceService {
         return list;
     }
 
-    private GeofencingRequest getGeofencingRequest(List<Geofence> list) {
+    public GeofencingRequest getGeofencingRequest(List<Geofence> list) {
         GeofencingRequest.Builder builder = new GeofencingRequest.Builder();
         builder.setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER);
         builder.addGeofences(list);

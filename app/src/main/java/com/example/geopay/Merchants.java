@@ -1,19 +1,34 @@
 package com.example.geopay;
 
+import android.Manifest;
 import android.app.Activity;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.TypedArray;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
+import com.google.android.gms.location.GeofencingClient;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Merchants extends AppCompatActivity {
+
+    private PendingIntent geofencePendingIntent;
 
     public static final String SELECTED_MERCH = "arg_array_list";
     String[] nameArray;
@@ -39,8 +54,7 @@ public class Merchants extends AppCompatActivity {
 
         adp = new impLVCustomAdapter(this, nameArray, imageArray);
 
-        if(message != "")
-        {
+        if (message != "") {
             adp = new impLVCustomAdapter(this, nameArray, imageArray);
             listView = (ListView) findViewById(R.id.lvMerch);
             listView.setAdapter(adp);
@@ -48,15 +62,36 @@ public class Merchants extends AppCompatActivity {
 
     }
 
-    public void subscribeClick(View view)
-    {
+    public void subscribeClick(View view) {
         names = adp.getNamesArray();
         checkedAr = adp.getCheckedArray();
 
         //backend processes - register externally
         // get geofenceModel based on getChcekedArray merchant id
-        List<GeofenceModel> models = GetGeofenceModelsBasedOn(0);
-        registerGeoFences(models);
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            List<GeofenceModel> models = GetGeofenceModelsBasedOn(0);
+            IGeofenceService geofenceService = registerGeoFences();
+
+            GeofencingClient client = geofenceService.GetClient();
+            client.addGeofences(geofenceService.getGeofencingRequest(geofenceService.GetGeofenceList(models)), getGeofencePendingIntent())
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            // Geofences added
+                            // ...
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            // Failed to add geofences
+                            // ...
+                        }
+                    });
+
+        }
 
 
         Intent intent = new Intent(this, Subscribe.class);
@@ -64,41 +99,56 @@ public class Merchants extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public List<GeofenceModel> GetGeofenceModelsBasedOn(int merchantId)
-    {
+    public List<GeofenceModel> GetGeofenceModelsBasedOn(int merchantId) {
         //List<GeofenceModel> list = new List<GeofenceModel>();
         ArrayList arrayList = new ArrayList<GeofenceModel>();
         arrayList.add(mockGeoFenceModelData());
         return arrayList;
     }
 
-    public void registerGeoFences(List<GeofenceModel> models)
-    {
+    public IGeofenceService registerGeoFences() {
         GeofenceServiceFactory factory = new GeofenceServiceFactory();
-        IGeofenceService service = factory.GetGeofenceService((Context)this, (Activity)this);
-
-        service.AddGeofence(models);
+        return factory.GetGeofenceService((Context) this);
     }
 
-    private String getSubscribedViews()
-    {
-        for (int i = 0; i < checkedAr.length ; i++) {
-            if(checkedAr[i]==true)
-            {
+    private String getSubscribedViews() {
+        for (int i = 0; i < checkedAr.length; i++) {
+            if (checkedAr[i] == true) {
                 selectedM = selectedM + ", " + names[i];
             }
         }
         return selectedM;
     }
 
-    private GeofenceModel mockGeoFenceModelData()
-    {
+    private GeofenceModel mockGeoFenceModelData() {
+        LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        double longitude = 10;
+        double latitude = 10;
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            longitude = location.getLongitude();
+            latitude = location.getLatitude();
+        }
+
         GeofenceModel model = new GeofenceModel();
         model.geofenceMerchantReference= "REF123";
         model.id = 0;
-        model.latitude = 50.1095;
-        model.longitude = 8.674;
-        model.radius = 10;
+        model.latitude = latitude;
+        model.longitude = longitude;
+        model.radius = 8;
         return model;
+    }
+
+    private PendingIntent getGeofencePendingIntent() {
+        // Reuse the PendingIntent if we already have it.
+        if (geofencePendingIntent != null) {
+            return geofencePendingIntent;
+        }
+        Intent intent = new Intent(this, GeofenceTransistionsIntentService.class);
+        // We use FLAG_UPDATE_CURRENT so that we get the same pending intent back when calling
+        // addGeofences() and removeGeofences().
+        geofencePendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        return geofencePendingIntent;
     }
 }
