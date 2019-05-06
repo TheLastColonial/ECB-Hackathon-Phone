@@ -31,6 +31,11 @@ public class Subscribe extends AppCompatActivity {
         }
     }
 
+public void backToHome(View view){
+
+        Intent intent = new Intent(this, UserHome.class);
+        startActivity(intent);
+    }
 
     //for testing notification flow:
     public void setNotificationTest(View view){
