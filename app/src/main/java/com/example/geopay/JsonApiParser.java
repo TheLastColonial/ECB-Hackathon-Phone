@@ -32,6 +32,16 @@ public class JsonApiParser {
         return merchantList;
     }
 
+    public static boolean paymentResult(String data) throws JSONException {
+        JSONObject jObj = new JSONObject(data);
+
+        return getPaymentResult("success", jObj);
+    }
+
+    private static boolean getPaymentResult(String tagName, JSONObject jObj) throws JSONException {
+        return jObj.getBoolean(tagName);
+    }
+
     private static String getName(String tagName, JSONObject jObj) throws JSONException {
         return jObj.getString(tagName);
     }
