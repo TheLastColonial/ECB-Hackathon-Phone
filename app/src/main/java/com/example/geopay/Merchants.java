@@ -1,20 +1,40 @@
 package com.example.geopay;
 
+import android.Manifest;
+import android.app.Activity;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.TypedArray;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
+import com.google.android.gms.location.GeofencingClient;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Merchants extends AppCompatActivity {
+
+    private static final String TAG = Merchants.class.getSimpleName();
+
+    private PendingIntent geofencePendingIntent;
 
     public static final String SELECTED_MERCH = "arg_array_list";
     ArrayList<String> nameList;
@@ -55,22 +75,46 @@ public class Merchants extends AppCompatActivity {
             listView = (ListView) findViewById(R.id.lvMerch);
             listView.setAdapter(adp);
         }
-
     }
 
-    public void subscribeClick(View view)
-    {
+    public void subscribeClick(View view) {
         names = adp.getNamesArray();
         checkedAr = adp.getCheckedArray();
 
+        //this.merchantList.merchantList.
         //connect to API
         JSONSubscriptionTask task = new JSONSubscriptionTask();
         task.execute(new String[]{""});
 
+        List<impMerchantLocation> merchantIdList = GetSelectedMerchantsLocation();
+
         //backend processes - register externally
         // get geofenceModel based on getChcekedArray merchant id
-        List<GeofenceModel> models = GetGeofenceModelsBasedOn(0);
-        registerGeoFences(models);
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+
+            IGeofenceService geofenceService = registerGeoFences();
+            GeofencingClient client = geofenceService.GetClient();
+
+            // add locations from db
+            List<GeofenceModel> modelList = GetGeofenceModelListFrom(merchantIdList);
+            if(!modelList.isEmpty()){
+            client.addGeofences(geofenceService.getGeofencingRequest(geofenceService.GetGeofenceList(modelList)), getGeofencePendingIntent())
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            int i = 0;
+                            i = 1;
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                        }
+                    });
+            }
+        }
 
 
         Intent intent = new Intent(this, Subscribe.class);
@@ -78,20 +122,19 @@ public class Merchants extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public List<GeofenceModel> GetGeofenceModelsBasedOn(int merchantId)
+    public List<GeofenceModel> GetGeofenceModelListFrom(List<impMerchantLocation> locs)
     {
-        //List<GeofenceModel> list = new List<GeofenceModel>();
-        ArrayList arrayList = new ArrayList<GeofenceModel>();
-        arrayList.add(mockGeoFenceModelData());
-        return arrayList;
+        List<GeofenceModel> result = new ArrayList<GeofenceModel>();
+        for(impMerchantLocation loc : locs)
+        {
+            result.add(getGeofenceModel(loc));
+        }
+        return result;
     }
 
-    public void registerGeoFences(List<GeofenceModel> models)
-    {
+    public IGeofenceService registerGeoFences() {
         GeofenceServiceFactory factory = new GeofenceServiceFactory();
-        IGeofenceService service = factory.GetGeofenceService((Context)this);
-
-        service.AddGeofence(models);
+        return factory.GetGeofenceService((Context) this);
     }
 
     private String getSubscribedViews()
@@ -106,15 +149,47 @@ public class Merchants extends AppCompatActivity {
         return selectedM;
     }
 
-    private GeofenceModel mockGeoFenceModelData()
+    private GeofenceModel getGeofenceModel(impMerchantLocation loc)
     {
-        GeofenceModel model = new GeofenceModel();
-        model.geofenceMerchantReference= "REF123";
-        model.id = 0;
-        model.latitude = 2.2;
-        model.longitude = 5.5;
-        model.radius = 10;
-        return model;
+        GeofenceModel result = new GeofenceModel();
+        result.geofenceMerchantReference = loc.getGoogleRef();
+        result.latitude = loc.getLatitude();
+        result.longitude = loc.getLongitude();
+        result.radius = loc.getRadius();
+        return result;
+    }
+
+    private PendingIntent getGeofencePendingIntent() {
+        if (geofencePendingIntent != null) {
+            return geofencePendingIntent;
+        }
+        Intent intent = new Intent(this, GeofenceTransistionsIntentService.class);
+
+        geofencePendingIntent = PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        return geofencePendingIntent;
+    }
+
+    private List<impMerchantLocation> GetSelectedMerchantsLocation()
+    {
+        List<impMerchantLocation> merchantIdList = new ArrayList<impMerchantLocation>();
+        names = adp.getNamesArray();
+        checkedAr = adp.getCheckedArray();
+
+        if(checkedAr.length == names.size())
+        {
+            for(int i = 0; i < checkedAr.length; ++i)
+            {
+                if(checkedAr[i]==true)
+                {
+                    for (impMerchantLocation merch : merchantList.merchantList) {
+                        if (names.get(i)==merch.getMerchantName()) {
+                            merchantIdList.add(merch);
+                        }
+                    }
+                }
+            }
+        }
+        return merchantIdList;
     }
 
     private class JSONSubscriptionTask extends AsyncTask<String, Void, Void> {
