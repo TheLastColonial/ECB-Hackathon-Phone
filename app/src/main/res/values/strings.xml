@@ -11,6 +11,7 @@
     <string name="geo_notify_area">You entered GeoPay area</string>
     <string name="geo_if_pay">Click to Pay</string>
     <string name="geo_pay_succ">Payment Successfull ^^</string>
+    <string name="geo_pay_success_content">Payment has been received, thank you!</string>
     <string-array name="geo_mock_areas">
         <item>City</item>
         <item>Shoreditch</item>
