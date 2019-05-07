@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="preloaded_fonts" translatable="false">
+        <item>@font/abeezee</item>
+        <item>@font/allerta_stencil</item>
+        <item>@font/amatic_sc</item>
+        <item>@font/atomic_age</item>
+        <item>@font/baloo</item>
+        <item>@font/boogaloo</item>
+    </array>
+</resources>

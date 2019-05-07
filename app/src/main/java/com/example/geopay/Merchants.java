@@ -9,7 +9,9 @@ import android.content.pm.PackageManager;
 import android.content.res.TypedArray;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 
@@ -35,13 +37,14 @@ public class Merchants extends AppCompatActivity {
     private PendingIntent geofencePendingIntent;
 
     public static final String SELECTED_MERCH = "arg_array_list";
-    String[] nameArray;
+    ArrayList<String> nameList;
     TypedArray imageArray;
     impLVCustomAdapter adp;
     ListView listView;
+    impMerchantList merchantList;
 
     boolean[] checkedAr;
-    String[] names;
+    ArrayList<String> names;
     String selectedM;
 
     @Override
@@ -51,24 +54,36 @@ public class Merchants extends AppCompatActivity {
 
         Intent intent = getIntent();
         String message = intent.getStringExtra(Area.AREA);
+        merchantList = new impMerchantList();
+        merchantList = (impMerchantList) intent.getSerializableExtra("merchantList");
 
-        //iniate resources for build ListView
-        nameArray = getResources().getStringArray(R.array.geo_mock_merchants);//change this to take data from db
+        //initiate resources for build ListView
+        //nameList = getResources().getStringArray(R.array.geo_mock_merchants);//change this to take data from db
+        nameList = new ArrayList();
         imageArray = getResources().obtainTypedArray(R.array.ico);
 
-        adp = new impLVCustomAdapter(this, nameArray, imageArray);
+        for (int i = 0; i < merchantList.merchantList.size(); i++){
+            impMerchantLocation merchantLocation = merchantList.merchantList.get(i);
+            nameList.add(merchantLocation.getMerchantName());
+        }
 
-        if (message != "") {
-            adp = new impLVCustomAdapter(this, nameArray, imageArray);
+        adp = new impLVCustomAdapter(this, nameList, imageArray);
+
+        if(message != "")
+        {
+            adp = new impLVCustomAdapter(this, nameList, imageArray);
             listView = (ListView) findViewById(R.id.lvMerch);
             listView.setAdapter(adp);
         }
-
     }
 
     public void subscribeClick(View view) {
         names = adp.getNamesArray();
         checkedAr = adp.getCheckedArray();
+
+        //connect to API
+        JSONSubscriptionTask task = new JSONSubscriptionTask();
+        task.execute(new String[]{""});
 
         //backend processes - register externally
         // get geofenceModel based on getChcekedArray merchant id
@@ -82,7 +97,6 @@ public class Merchants extends AppCompatActivity {
 
             // remove first
             client.removeGeofences(Arrays.asList("REF211"));
-
 
             client.addGeofences(geofenceService.getGeofencingRequest(geofenceService.GetGeofenceList(models)), getGeofencePendingIntent())
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -115,10 +129,12 @@ public class Merchants extends AppCompatActivity {
         return factory.GetGeofenceService((Context) this);
     }
 
-    private String getSubscribedViews() {
-        for (int i = 0; i < checkedAr.length; i++) {
-            if (checkedAr[i] == true) {
-                selectedM = selectedM + ", " + names[i];
+    private String getSubscribedViews()
+    {
+        for (int i = 0; i < checkedAr.length ; i++) {
+            if(checkedAr[i]==true)
+            {
+                selectedM = selectedM + ", " + names.get(i);
             }
         }
         return selectedM;
@@ -152,5 +168,21 @@ public class Merchants extends AppCompatActivity {
 
         geofencePendingIntent = PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         return geofencePendingIntent;
+    }
+
+    private class JSONSubscriptionTask extends AsyncTask<String, Void, Void> {
+        //retrieve currency exchange rate
+        @Override
+        protected Void doInBackground(String... params) {
+            ArrayList<Integer> merchantIdList = new ArrayList<Integer>();
+            for (impMerchantLocation merch : merchantList.merchantList) {
+                if (nameList.contains(merch.getMerchantName())) {
+                    merchantIdList.add(merch.getMerchantId());
+                }
+            }
+            Log.d("data", params[0]);
+            (new HttpClient()).postSubscriptions(merchantIdList);
+            return null;
+        }
     }
 }
