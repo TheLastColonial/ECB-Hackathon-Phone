@@ -81,24 +81,26 @@ public class Merchants extends AppCompatActivity {
         names = adp.getNamesArray();
         checkedAr = adp.getCheckedArray();
 
+        //this.merchantList.merchantList.
         //connect to API
         JSONSubscriptionTask task = new JSONSubscriptionTask();
         task.execute(new String[]{""});
+
+        List<impMerchantLocation> merchantIdList = GetSelectedMerchantsLocation();
 
         //backend processes - register externally
         // get geofenceModel based on getChcekedArray merchant id
         if (ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            List<GeofenceModel> models = GetGeofenceModelsBasedOn(0);
-            IGeofenceService geofenceService = registerGeoFences();
 
+            IGeofenceService geofenceService = registerGeoFences();
             GeofencingClient client = geofenceService.GetClient();
 
-            // remove first
-            client.removeGeofences(Arrays.asList("REF211"));
-
-            client.addGeofences(geofenceService.getGeofencingRequest(geofenceService.GetGeofenceList(models)), getGeofencePendingIntent())
+            // add locations from db
+            List<GeofenceModel> modelList = GetGeofenceModelListFrom(merchantIdList);
+            if(!modelList.isEmpty()){
+            client.addGeofences(geofenceService.getGeofencingRequest(geofenceService.GetGeofenceList(modelList)), getGeofencePendingIntent())
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
@@ -111,6 +113,7 @@ public class Merchants extends AppCompatActivity {
                         public void onFailure(@NonNull Exception e) {
                         }
                     });
+            }
         }
 
 
@@ -119,13 +122,14 @@ public class Merchants extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public List<GeofenceModel> GetGeofenceModelsBasedOn(int merchantId) {
-        //List<GeofenceModel> list = new List<GeofenceModel>();
-        ArrayList arrayList = new ArrayList<GeofenceModel>();
-        arrayList.add(mockGeoFenceModelData());
-        arrayList.add(mockGeoFenceModelData2());
-        arrayList.add(mockGeoFenceModelData3());
-        return arrayList;
+    public List<GeofenceModel> GetGeofenceModelListFrom(List<impMerchantLocation> locs)
+    {
+        List<GeofenceModel> result = new ArrayList<GeofenceModel>();
+        for(impMerchantLocation loc : locs)
+        {
+            result.add(getGeofenceModel(loc));
+        }
+        return result;
     }
 
     public IGeofenceService registerGeoFences() {
@@ -144,44 +148,14 @@ public class Merchants extends AppCompatActivity {
         return selectedM;
     }
 
-    private GeofenceModel mockGeoFenceModelData() {
-        LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        double longitude = 10;
-        double latitude = 10;
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            longitude = location.getLongitude();
-            latitude = location.getLatitude();
-        }
-
-        GeofenceModel model = new GeofenceModel();
-        model.geofenceMerchantReference= "REF316";
-        model.id = 0;
-        model.latitude = 50.109585;//latitude; //50.04;
-        model.longitude = 8.701984; //8.08;
-        model.radius = 20;
-        return model;
-    }
-
-    private GeofenceModel mockGeoFenceModelData2() {
-        GeofenceModel model = new GeofenceModel();
-        model.geofenceMerchantReference= "REF315";
-        model.id = 0;
-        model.latitude = 50.107585;//latitude; //50.04;
-        model.longitude = 8.700984; //8.08;
-        model.radius = 20;
-        return model;
-    }
-
-    private GeofenceModel mockGeoFenceModelData3() {
-        GeofenceModel model = new GeofenceModel();
-        model.geofenceMerchantReference= "REF314";
-        model.id = 0;
-        model.latitude = 50.109575;//latitude; //50.04;
-        model.longitude = 8.701975; //8.08;
-        model.radius = 20;
-        return model;
+    private GeofenceModel getGeofenceModel(impMerchantLocation loc)
+    {
+        GeofenceModel result = new GeofenceModel();
+        result.geofenceMerchantReference = loc.getGoogleRef();
+        result.latitude = loc.getLatitude();
+        result.longitude = loc.getLongitude();
+        result.radius = loc.getRadius();
+        return result;
     }
 
     private PendingIntent getGeofencePendingIntent() {
@@ -192,6 +166,29 @@ public class Merchants extends AppCompatActivity {
 
         geofencePendingIntent = PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         return geofencePendingIntent;
+    }
+
+    private List<impMerchantLocation> GetSelectedMerchantsLocation()
+    {
+        List<impMerchantLocation> merchantIdList = new ArrayList<impMerchantLocation>();
+        names = adp.getNamesArray();
+        checkedAr = adp.getCheckedArray();
+
+        if(checkedAr.length == names.size())
+        {
+            for(int i = 0; i < checkedAr.length; ++i)
+            {
+                if(checkedAr[i]==true)
+                {
+                    for (impMerchantLocation merch : merchantList.merchantList) {
+                        if (names.get(i)==merch.getMerchantName()) {
+                            merchantIdList.add(merch);
+                        }
+                    }
+                }
+            }
+        }
+        return merchantIdList;
     }
 
     private class JSONSubscriptionTask extends AsyncTask<String, Void, Void> {
