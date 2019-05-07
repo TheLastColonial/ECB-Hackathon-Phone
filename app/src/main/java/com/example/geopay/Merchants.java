@@ -99,9 +99,10 @@ public class Merchants extends AppCompatActivity {
         for (int i = 0; i < checkedAr.length ; i++) {
             if(checkedAr[i]==true)
             {
-                selectedM = selectedM + ", " + names.get(i);
+                selectedM += " " + names.get(i)+ ",";
             }
         }
+        
         return selectedM;
     }
 
@@ -122,7 +123,7 @@ public class Merchants extends AppCompatActivity {
         protected Void doInBackground(String... params) {
             ArrayList<Integer> merchantIdList = new ArrayList<Integer>();
             for (impMerchantLocation merch : merchantList.merchantList) {
-                if (nameList.contains(merch.getMerchantName())) {
+                if (names.contains(merch.getMerchantName())) {
                     merchantIdList.add(merch.getMerchantId());
                 }
             }
