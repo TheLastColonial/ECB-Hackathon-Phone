@@ -45,7 +45,7 @@ public class Merchants extends AppCompatActivity {
 
     boolean[] checkedAr;
     ArrayList<String> names;
-    String selectedM;
+    String selectedM = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

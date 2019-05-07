@@ -9,7 +9,7 @@
     <string name="geo_succ">You succesfully subscribed to following merchants:</string>
     <string name="geo_pin">Enter your user pin</string>
     <string name="geo_notify_area">You entered GeoPay area</string>
-    <string name="geo_if_pay">Do you want to pay?</string>
+    <string name="geo_if_pay">Click to Pay</string>
     <string name="geo_pay_succ">Payment Successfull ^^</string>
     <string-array name="geo_mock_areas">
         <item>City</item>
