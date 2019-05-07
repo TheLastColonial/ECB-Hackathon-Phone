@@ -22,11 +22,15 @@ import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Merchants extends AppCompatActivity {
+
+    private static final String TAG = Merchants.class.getSimpleName();
 
     private PendingIntent geofencePendingIntent;
 
@@ -75,22 +79,22 @@ public class Merchants extends AppCompatActivity {
             IGeofenceService geofenceService = registerGeoFences();
 
             GeofencingClient client = geofenceService.GetClient();
+
+            // remove first
+            client.removeGeofences(Arrays.asList("REF211"));
+
+
             client.addGeofences(geofenceService.getGeofencingRequest(geofenceService.GetGeofenceList(models)), getGeofencePendingIntent())
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            // Geofences added
-                            // ...
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            // Failed to add geofences
-                            // ...
                         }
                     });
-
         }
 
 
@@ -125,30 +129,28 @@ public class Merchants extends AppCompatActivity {
         double longitude = 10;
         double latitude = 10;
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             longitude = location.getLongitude();
             latitude = location.getLatitude();
         }
 
         GeofenceModel model = new GeofenceModel();
-        model.geofenceMerchantReference= "REF123";
+        model.geofenceMerchantReference= "REF313";
         model.id = 0;
-        model.latitude = latitude;
-        model.longitude = longitude;
-        model.radius = 8;
+        model.latitude = 50.111862;//latitude; //50.04;
+        model.longitude = 8.712703; //8.08;
+        model.radius = 100;
         return model;
     }
 
     private PendingIntent getGeofencePendingIntent() {
-        // Reuse the PendingIntent if we already have it.
         if (geofencePendingIntent != null) {
             return geofencePendingIntent;
         }
         Intent intent = new Intent(this, GeofenceTransistionsIntentService.class);
-        // We use FLAG_UPDATE_CURRENT so that we get the same pending intent back when calling
-        // addGeofences() and removeGeofences().
-        geofencePendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        geofencePendingIntent = PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         return geofencePendingIntent;
     }
 }

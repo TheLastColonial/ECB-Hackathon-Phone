@@ -1,6 +1,5 @@
 package com.example.geopay;
 
-import android.app.Activity;
 import android.content.Context;
 
 public class GeofenceServiceFactory

@@ -20,11 +20,11 @@ import java.util.List;
 
 public class GeofenceTransistionsIntentService extends IntentService
 {
-    private static final String CHANNEL_ID = "channel_01";
+    private static final String CHANNEL_ID = "channel_id";
 
     String TAG = "GeofenceIntentService";
     public GeofenceTransistionsIntentService() {
-        super("GeofenceIntentService");
+        super("GeofenceTransistionsIntentService");
     }
 
     protected void onHandleIntent(Intent intent) {
@@ -81,7 +81,7 @@ public class GeofenceTransistionsIntentService extends IntentService
         }
 
         // Create an explicit content Intent that starts the main Activity.
-        Intent notificationIntent = new Intent(getApplicationContext(), MainActivity.class);
+        Intent notificationIntent = new Intent(getApplicationContext(), Payment.class);
 
         // Construct a task stack.
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);

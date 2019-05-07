@@ -116,7 +116,7 @@ public class GeofenceService implements IGeofenceService {
                             model.longitude,
                             model.radius
                     )
-                    .setExpirationDuration(GEOFENCE_EXPRITATION_TIME)
+                    .setExpirationDuration(Geofence.NEVER_EXPIRE)
                     .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER |
                             Geofence.GEOFENCE_TRANSITION_EXIT)
                     .build());
