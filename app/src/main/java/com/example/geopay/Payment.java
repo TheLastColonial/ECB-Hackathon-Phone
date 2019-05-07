@@ -35,14 +35,12 @@ public class Payment extends AppCompatActivity {
         @Override
         protected Void doInBackground(String... params) {
             Log.d("data", params[0]);
-            String paymentResult = (new HttpClient()).postPayment(transactionId);
+            boolean paymentResult = (new HttpClient()).postPayment(transactionId);
             try {
-                boolean result = JsonApiParser.paymentResult(paymentResult);
-
-                if(result){
+                if(paymentResult){
                     Toast.makeText(getApplicationContext(),"MMMMMM Toast :)",Toast.LENGTH_LONG).show();
                 }
-            } catch (JSONException e){
+            } catch (Exception e){
                 e.printStackTrace();
             }
             return null;

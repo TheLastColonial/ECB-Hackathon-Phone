@@ -32,10 +32,8 @@ public class JsonApiParser {
         return merchantList;
     }
 
-    public static boolean paymentResult(String data) throws JSONException {
-        JSONObject jObj = new JSONObject(data);
-
-        return getPaymentResult("success", jObj);
+    public static boolean paymentResult(JSONObject data) throws JSONException {
+        return getPaymentResult("success", data);
     }
 
     private static boolean getPaymentResult(String tagName, JSONObject jObj) throws JSONException {
