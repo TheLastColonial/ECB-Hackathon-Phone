@@ -9,15 +9,15 @@
     <string name="geo_succ">You succesfully subscribed to following merchants:</string>
     <string name="geo_pin">Enter your user pin</string>
     <string name="geo_notify_area">You entered GeoPay area</string>
-    <string name="geo_if_pay">Click to Pay</string>
+    <string name="geo_if_pay">Click to Pay 10€ to Museum </string>
     <string name="geo_pay_succ">Payment Successfull ^^</string>
     <string name="geo_pay_success_content">Payment has been received, thank you!</string>
     <string-array name="geo_mock_areas">
         <item>City</item>
-        <item>Shoreditch</item>
-        <item>Camden</item>
-        <item>Vauxhall</item>
-        <item>Kensington</item>
+        <item>Frankfurt</item>
+        <item>London</item>
+        <item>Warsaw</item>
+        <item>Paris</item>
     </string-array>
     <string-array name="geo_mock_merchants">
         <item>Museum</item>
