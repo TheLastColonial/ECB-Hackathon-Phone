@@ -102,6 +102,8 @@ public class Merchants extends AppCompatActivity {
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
+                            int i = 0;
+                            i = 1;
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -121,6 +123,8 @@ public class Merchants extends AppCompatActivity {
         //List<GeofenceModel> list = new List<GeofenceModel>();
         ArrayList arrayList = new ArrayList<GeofenceModel>();
         arrayList.add(mockGeoFenceModelData());
+        arrayList.add(mockGeoFenceModelData2());
+        arrayList.add(mockGeoFenceModelData3());
         return arrayList;
     }
 
@@ -152,11 +156,31 @@ public class Merchants extends AppCompatActivity {
         }
 
         GeofenceModel model = new GeofenceModel();
-        model.geofenceMerchantReference= "REF313";
+        model.geofenceMerchantReference= "REF316";
         model.id = 0;
-        model.latitude = 50.111862;//latitude; //50.04;
-        model.longitude = 8.712703; //8.08;
-        model.radius = 100;
+        model.latitude = 50.109585;//latitude; //50.04;
+        model.longitude = 8.701984; //8.08;
+        model.radius = 20;
+        return model;
+    }
+
+    private GeofenceModel mockGeoFenceModelData2() {
+        GeofenceModel model = new GeofenceModel();
+        model.geofenceMerchantReference= "REF315";
+        model.id = 0;
+        model.latitude = 50.107585;//latitude; //50.04;
+        model.longitude = 8.700984; //8.08;
+        model.radius = 20;
+        return model;
+    }
+
+    private GeofenceModel mockGeoFenceModelData3() {
+        GeofenceModel model = new GeofenceModel();
+        model.geofenceMerchantReference= "REF314";
+        model.id = 0;
+        model.latitude = 50.109575;//latitude; //50.04;
+        model.longitude = 8.701975; //8.08;
+        model.radius = 20;
         return model;
     }
 

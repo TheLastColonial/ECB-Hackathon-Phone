@@ -10,8 +10,10 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Build;
+import android.view.View;
 
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingEvent;
@@ -21,6 +23,7 @@ import java.util.List;
 public class GeofenceTransistionsIntentService extends IntentService
 {
     private static final String CHANNEL_ID = "channel_id";
+    private static final String CHANNEL_ID2 = "1";
 
     String TAG = "GeofenceIntentService";
     public GeofenceTransistionsIntentService() {
@@ -55,7 +58,8 @@ public class GeofenceTransistionsIntentService extends IntentService
             //);
 
             // Send notification and log the transition details.
-            sendNotification("notification");
+            //sendNotification("notification");
+            setNotificationTest();
             //Log.i(TAG, geofenceTransitionDetails);
         } else {
             // Log the error.
@@ -120,5 +124,29 @@ public class GeofenceTransistionsIntentService extends IntentService
 
         // Issue the notification
         mNotificationManager.notify(0, builder.build());
+    }
+
+    public void setNotificationTest(){
+
+        Intent intent = new Intent(this, Payment.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+
+        String title = getResources().getString(R.string.geo_notify_area);
+        String content = getResources().getString(R.string.geo_if_pay);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID2)
+                .setSmallIcon(R.drawable.animal)
+                .setContentTitle(title)
+                .setContentText(content)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true);
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        // notificationId is a unique int for each notification that you must define
+        java.util.Random rand = new java.util.Random();
+
+        int notificationId =  rand.nextInt(47775678);
+        notificationManager.notify(notificationId, builder.build());
     }
 }
